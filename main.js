@@ -35,7 +35,6 @@ $(()=>{
 				if(cell.number == 0){
 					if(!completeCell(cell)){
 						console.log("asd")
-						x-=4;
 					}
 				}
 			}

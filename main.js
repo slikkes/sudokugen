@@ -23,11 +23,23 @@ $(()=>{
 
 		setRandomCells();
 
-		cells.forEach(e=>{
+		/*cells.forEach(e=>{
 			if(e.number == 0){
 				completeCell(e);
 			}
-		})
+		})*/
+
+		for(y=0; y<9; y++){
+			for(x=0; x<9; x++){
+				let cell = _.find(cells, {x:x, y:y});
+				if(cell.number == 0){
+					if(!completeCell(cell)){
+						console.log("asd")
+						x-=4;
+					}
+				}
+			}
+		}
 
 
 		viewCells();
@@ -45,7 +57,7 @@ function initCells(){
 
 function setRandomCells()
 {
-	let q = 25;
+	let q = 10;
 
 	for(let i = 0; i<q; i++){
 		let x = Math.floor(Math.random()*8);
@@ -56,8 +68,6 @@ function setRandomCells()
 		completeCell(cell);
 	}
 
-
-
 }
 
 
@@ -67,11 +77,16 @@ function completeCell(cell)
 	let availableDigits = getAvailableDigits(cell.x,cell.y);
 	let max = availableDigits.length;
 
-	let choosen = Math.floor(Math.random()*max);
-	let number = availableDigits[choosen];
-	
-	cell.number=number;
-	//cells.push(new Cell(x,y,number));
+	if(max>0){
+		let choosen = Math.floor(Math.random()*max);
+		let number = availableDigits[choosen];
+
+		cell.number=number;
+
+		return true;
+	}else{
+		return false;
+	}
 
 }
 
@@ -108,12 +123,19 @@ function resetTable(){
 
 		}
 	}
+	$("#err").css("background-color", "white");
+
 }
 
 function viewCells(){
 	cells.forEach(e=>{
-		if(e.number != 0)
+		if(e.number != 0){
+
 			$("#r"+e.y+" ."+e.x).text(e.number);
+		}else{
+			$("#err").css("background-color", "red");
+
+		}
 	})
 }
 

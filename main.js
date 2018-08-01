@@ -1,16 +1,6 @@
 let digits = [1,2,3,4,5,6,7,8,9];
 
-class Cell{
-	constructor(posx, posy)
-	{
-		this.x = posx;
-		this.y = posy;
-		this.col = this.x;
-		this.row = this.y;
-		this.megacell = determineMegacell(this.x, this.y);
-		this.number = 0;
-	}		
-}	
+
 
 let cells;
 $(()=>{
@@ -21,52 +11,45 @@ $(()=>{
 		
 		initCells();
 
-		setRandomCells();
 
-		/*cells.forEach(e=>{
-			if(e.number == 0){
-				completeCell(e);
-			}
-		})*/
+		let failCounter = 0;
+		let failIndex = 0;
+		for(let i = 0; i<81; i++){
+			
 
-		for(y=0; y<9; y++){
-			for(x=0; x<9; x++){
-				let cell = _.find(cells, {x:x, y:y});
-				if(cell.number == 0){
-					if(!completeCell(cell)){
-						console.log("asd")
-					}
+			
+
+			v = createVector(i);
+
+			console.log(v.x+":"+v.y);
+
+			let cell = _.find(cells, {x:v.x, y:v.y});
+
+			if(!completeCell(cell)){
+				if(i <= failIndex){
+					failCounter++;
+					i-=failCounter;
+				}else{
+					failIndex = i;
+					failCounter = 1;
+					i--;
 				}
+
+				if(i < 0) {
+					resetCells()
+					i=-1;
+				} 
 			}
 		}
-
 
 		viewCells();
 	})
 	
 })
 
-function initCells(){
-	for(y=0;y<9;y++){
-		for(x=0;x<9;x++){
-			cells.push(new Cell(x,y))
-		}
-	}
-}
-
-function setRandomCells()
-{
-	let q = 10;
-
-	for(let i = 0; i<q; i++){
-		let x = Math.floor(Math.random()*8);
-		let y = Math.floor(Math.random()*8);
-
-		let cell = _.find(cells,{x: x, y: y});
-
-		completeCell(cell);
-	}
-
+function resetCells(){
+	cells=[];
+	initCells();
 }
 
 
@@ -87,13 +70,6 @@ function completeCell(cell)
 		return false;
 	}
 
-}
-
-
-function determineMegacell(x,y)
-{
-	let megacell = Math.floor(x/3) + (Math.floor(y/3))*3;
-	return megacell;
 }
 
 
@@ -125,19 +101,6 @@ function resetTable(){
 	$("#err").css("background-color", "white");
 
 }
-
-function viewCells(){
-	cells.forEach(e=>{
-		if(e.number != 0){
-
-			$("#r"+e.y+" ."+e.x).text(e.number);
-		}else{
-			$("#err").css("background-color", "red");
-
-		}
-	})
-}
-
 
 
 
